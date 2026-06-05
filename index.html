@@ -3,32 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ДХЛ - Дворовая Хоккейная Лига</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="description" content="Дворовая хоккейная лига - самая экстремальная хоккейная лига">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https: http:; connect-src 'self' https: http: wss:; frame-src 'self' https:; font-src 'self' https: data:;">
+    <title>ДХЛ - Дворовая Хоккейная Лига</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/strider" rel="stylesheet">
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, push, remove, update, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-        
-        window.firebaseModules = {
-            initializeApp,
-            getDatabase,
-            ref,
-            set,
-            onValue,
-            push,
-            remove,
-            update,
-            get,
-            getStorage,
-            storageRef,
-            uploadBytes,
-            getDownloadURL
-        };
-    </script>
     <style>
         :root {
             --metal-dark: #0a0a0a;
@@ -196,6 +176,22 @@
             border-bottom: 3px solid var(--accent-red);
         }
         
+        .news-image-placeholder {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid var(--accent-red);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .news-image-placeholder i {
+            font-size: 4rem;
+            opacity: 0.7;
+        }
+        
         .news-content { padding: 20px; }
         
         .news-date {
@@ -322,6 +318,11 @@
             line-height: 1.8;
             font-size: 1.1rem;
         }
+        
+        .news-modal-content p { margin-bottom: 15px; }
+        .news-modal-content strong { font-weight: bold; color: var(--accent-red); }
+        .news-modal-content u { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: var(--accent-blue); }
+        .news-modal-content h1, .news-modal-content h2, .news-modal-content h3 { margin: 15px 0 10px; color: var(--accent-blue); }
         
         .tournament-header {
             display: flex;
@@ -653,6 +654,7 @@
             display: flex;
             gap: 10px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
         
         .loader {
@@ -682,6 +684,7 @@
             z-index: 1001;
             display: none;
             align-items: center;
+            gap: 10px;
             animation: slideIn 0.3s ease;
         }
         
@@ -690,6 +693,7 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
+        /* Адаптивные стили */
         @media (max-width: 1200px) {
             .container { padding: 15px; }
             .admin-panel { width: 100%; right: -100%; }
@@ -744,6 +748,36 @@
             }
             .ice-rink-container { padding: 12px; }
             .playback-btn { width: 34px; height: 34px; }
+            
+            /* Адаптивные матчи в сериях плей-офф */
+            .playoff-series-matches {
+                grid-template-columns: 1fr;
+            }
+            .playoff-match-body {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .playoff-match-team {
+                width: 100%;
+                justify-content: center !important;
+            }
+            .playoff-match-score-input {
+                width: 80px !important;
+            }
+            .admin-match-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-match-controls button, .admin-match-controls label {
+                margin: 5px 0;
+            }
+            .match-edit-teams {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .match-edit-scores {
+                order: -1;
+            }
         }
         
         .team-list-item {
@@ -756,6 +790,8 @@
             align-items: center;
             justify-content: space-between;
             transition: all 0.3s ease;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .team-list-item:hover {
@@ -1313,6 +1349,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .team-stats-reset-btn {
@@ -1517,6 +1554,8 @@
             margin-bottom: 10px;
             color: var(--text-gray);
             font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .playoff-match-number {
@@ -1528,6 +1567,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .playoff-match-body {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .playoff-match-team {
+                width: 100%;
+                justify-content: center !important;
+            }
+            .playoff-match-team-home { justify-content: center !important; }
+            .playoff-match-team-away { justify-content: center !important; flex-direction: row !important; }
+            .playoff-match-score-input {
+                width: 100px !important;
+                margin: 5px auto !important;
+            }
         }
         
         .playoff-match-team {
@@ -1563,6 +1620,7 @@
             gap: 10px;
             margin-top: 15px;
             justify-content: center;
+            flex-wrap: wrap;
         }
         
         .playoff-series-info {
@@ -1775,6 +1833,7 @@
             padding: 12px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             transition: all 0.3s ease;
+            flex-wrap: wrap;
         }
         
         .goal-scorer-item:hover {
@@ -2383,6 +2442,28 @@
             font-size: 0.8rem;
             color: var(--accent-blue);
             margin-top: 3px;
+        }
+        
+        /* Форматирование текста новости */
+        .news-format-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .format-btn {
+            background: var(--metal-light);
+            border: 1px solid var(--metal-border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-white);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .format-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
         }
         
         /* SvsL Styles */
@@ -3067,13 +3148,19 @@
                 <h3><i class="fas fa-edit"></i> Редактирование новости</h3>
                 <button class="modal-close" onclick="closeEditNewsModal()">&times;</button>
             </div>
+            <div class="news-format-toolbar">
+                <button type="button" class="format-btn" onclick="formatNewsText('bold')"><i class="fas fa-bold"></i> Жирный</button>
+                <button type="button" class="format-btn" onclick="formatNewsText('underline')"><i class="fas fa-underline"></i> Волнистый</button>
+                <button type="button" class="format-btn" onclick="formatNewsText('indent')"><i class="fas fa-indent"></i> Отступ</button>
+            </div>
             <div class="form-group">
                 <label class="form-label">Заголовок</label>
                 <input type="text" class="form-input" id="editNewsTitle" placeholder="Заголовок">
             </div>
             <div class="form-group">
-                <label class="form-label">Текст</label>
+                <label class="form-label">Текст (HTML)</label>
                 <textarea class="form-textarea" id="editNewsContent" rows="5"></textarea>
+                <div style="font-size:0.8rem; color:var(--text-gray); margin-top:5px;">Используйте теги: &lt;strong&gt;жирный&lt;/strong&gt;, &lt;u&gt;волнистый&lt;/u&gt;, &lt;p&gt;отступ&lt;/p&gt;</div>
             </div>
             <div class="form-group">
                 <label class="form-label">Изображение</label>
@@ -3084,9 +3171,77 @@
                 </div>
                 <input type="file" id="editNewsImageUpload" accept="image/*" style="display: none;" onchange="handleEditNewsImageUpload(event)">
             </div>
+            <div class="form-group">
+                <label class="form-label">Цвет фона (если нет фото)</label>
+                <select class="form-select" id="editNewsColor">
+                    <option value="red">Красный</option>
+                    <option value="blue">Синий</option>
+                    <option value="green">Зелёный</option>
+                    <option value="black">Чёрный</option>
+                    <option value="yellow">Жёлтый</option>
+                    <option value="purple">Фиолетовый</option>
+                    <option value="pink">Розовый</option>
+                    <option value="orange">Оранжевый</option>
+                    <option value="gold">Золотой</option>
+                    <option value="brown">Коричневый</option>
+                    <option value="lightgreen">Бледно-зелёный</option>
+                </select>
+            </div>
             <div class="btn-group">
                 <button class="btn btn-blue" onclick="saveNewsEdit()"><i class="fas fa-save"></i> Сохранить</button>
                 <button class="btn" onclick="closeEditNewsModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="addNewsModal">
+        <div class="edit-news-modal">
+            <div class="edit-team-header">
+                <h3><i class="fas fa-plus-circle"></i> Добавить новость</h3>
+                <button class="modal-close" onclick="closeAddNewsModal()">&times;</button>
+            </div>
+            <div class="news-format-toolbar">
+                <button type="button" class="format-btn" onclick="formatAddNewsText('bold')"><i class="fas fa-bold"></i> Жирный</button>
+                <button type="button" class="format-btn" onclick="formatAddNewsText('underline')"><i class="fas fa-underline"></i> Волнистый</button>
+                <button type="button" class="format-btn" onclick="formatAddNewsText('indent')"><i class="fas fa-indent"></i> Отступ</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Заголовок</label>
+                <input type="text" class="form-input" id="addNewsTitle" placeholder="Заголовок">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Текст (HTML)</label>
+                <textarea class="form-textarea" id="addNewsContent" rows="5"></textarea>
+                <div style="font-size:0.8rem; color:var(--text-gray); margin-top:5px;">Используйте теги: &lt;strong&gt;жирный&lt;/strong&gt;, &lt;u&gt;волнистый&lt;/u&gt;, &lt;p&gt;отступ&lt;/p&gt;</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Изображение</label>
+                <div class="image-upload" onclick="document.getElementById('addNewsImageUpload').click()">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p>Нажмите для загрузки</p>
+                    <img id="addNewsImagePreview" class="uploaded-image" src="" alt="Превью">
+                </div>
+                <input type="file" id="addNewsImageUpload" accept="image/*" style="display: none;" onchange="handleAddNewsImageUpload(event)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Цвет фона (если нет фото)</label>
+                <select class="form-select" id="addNewsColor">
+                    <option value="red">Красный</option>
+                    <option value="blue">Синий</option>
+                    <option value="green">Зелёный</option>
+                    <option value="black">Чёрный</option>
+                    <option value="yellow">Жёлтый</option>
+                    <option value="purple">Фиолетовый</option>
+                    <option value="pink">Розовый</option>
+                    <option value="orange">Оранжевый</option>
+                    <option value="gold">Золотой</option>
+                    <option value="brown">Коричневый</option>
+                    <option value="lightgreen">Бледно-зелёный</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-blue" onclick="saveAddNews()"><i class="fas fa-save"></i> Добавить</button>
+                <button class="btn" onclick="closeAddNewsModal()">Отмена</button>
             </div>
         </div>
     </div>
@@ -3198,7 +3353,7 @@
                 <div class="live-score-period" id="liveScorePeriod">1-й период, 00:00</div>
             </div>
             
-            <!-- КАРТА ПОЛЯ (без ленты событий, с названиями команд в центре) -->
+            <!-- КАРТА ПОЛЯ -->
             <div class="ice-rink-container">
                 <div class="rink-visual">
                     <div class="goal-notification" id="goalNotification">ГОЛ!</div>
@@ -3412,19 +3567,8 @@
             <div class="admin-section gradient-border-left" id="newsTab" style="display: none;">
                 <h3><i class="fas fa-newspaper"></i> Управление новостями</h3>
                 <div class="form-group">
-                    <label class="form-label">Добавить новость</label>
-                    <input type="text" class="form-input" id="newsTitle" placeholder="Заголовок">
-                    <label class="form-label" style="margin-top: 15px;">Текст</label>
-                    <textarea class="form-textarea" id="newsContent" rows="5" placeholder="Текст..."></textarea>
-                    <label class="form-label" style="margin-top: 15px;">Изображение</label>
-                    <div class="image-upload" onclick="document.getElementById('newsImageUpload').click()">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <p>Нажмите для загрузки</p>
-                        <img id="newsImagePreview" class="uploaded-image" src="" alt="Превью">
-                    </div>
-                    <input type="file" id="newsImageUpload" accept="image/*" style="display: none;" onchange="handleNewsImageUpload(event)">
-                    <div style="margin-top: 20px;">
-                        <button class="btn" onclick="addNews()"><i class="fas fa-plus-circle"></i> Добавить</button>
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn" onclick="openAddNewsModal()"><i class="fas fa-plus-circle"></i> Добавить новость</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -3471,7 +3615,7 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-blue" onclick="saveFirebaseConfig()"><i class="fas fa-save"></i> Сохранить</button>
-                    <button class="test-connection-btn" onclick="testFirebaseConnection()"><i class="fas fa-plug"></i> Проверить</button>
+                    <button class="btn" onclick="testFirebaseConnection()"><i class="fas fa-plug"></i> Проверить</button>
                 </div>
             </div>
             <div class="admin-section gradient-border-left" id="matchesTab" style="display: none;">
@@ -3520,7 +3664,7 @@
                 <div class="form-group">
                     <div style="margin-bottom: 20px;">
                         <button class="btn" onclick="generatePlayoffBracket()"><i class="fas fa-sitemap"></i> Сгенерировать сетку</button>
-                        <button class="btn btn-blue" onclick="updatePlayoffTeams()"><i class="fas fa-sync-alt"></i> Обновить команды</button>
+                        <button class="btn btn-blue" onclick="manualUpdatePlayoffTeams()"><i class="fas fa-sync-alt"></i> Обновить команды (ручное)</button>
                     </div>
                     <div class="form-group">
                         <h4>Статус</h4>
@@ -3581,7 +3725,7 @@
                 <p style="color: var(--text-gray);">Получите ключ на <a href="https://imgbb.com" target="_blank" style="color: var(--accent-blue);">imgbb.com</a></p>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-blue" onclick="saveImgbbConfig()"><i class="fas fa-save"></i> Сохранить</button>
-                    <button class="test-connection-btn" onclick="testImgbbConnection()"><i class="fas fa-plug"></i> Проверить</button>
+                    <button class="btn" onclick="testImgbbConnection()"><i class="fas fa-plug"></i> Проверить</button>
                 </div>
             </div>
             <div class="admin-section gradient-border-left" id="legendsTab" style="display: none;">
@@ -3672,6 +3816,7 @@
             <div class="standings-controls" id="standingsControls" style="display: none;">
                 <button class="team-stats-reset-btn" onclick="resetAllTeamsStats()"><i class="fas fa-undo"></i> Сбросить статистику</button>
                 <button class="btn btn-small" onclick="resetTournamentTable()" style="background: #ff4444;"><i class="fas fa-trash"></i> Сбросить таблицу</button>
+                <button class="btn btn-small" onclick="manualUpdatePlayoffTeams()" style="background: var(--accent-blue);"><i class="fas fa-sync-alt"></i> Обновить плей-офф</button>
             </div>
             <div class="card gradient-border-left">
                 <table class="standings-table" id="standingsTable">
@@ -3800,6 +3945,27 @@
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, push, remove, update, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        
+        window.firebaseModules = {
+            initializeApp,
+            getDatabase,
+            ref,
+            set,
+            onValue,
+            push,
+            remove,
+            update,
+            get,
+            getStorage,
+            storageRef,
+            uploadBytes,
+            getDownloadURL
+        };
+    </script>
 <script>
     (function() {
         // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
@@ -3847,13 +4013,14 @@
         let uploadedLeagueLogoDataURL = null;
         let editTeamLogoDataURL = null;
         let editNewsImageDataURL = null;
+        let addNewsImageDataURL = null;
         let isAdminAuthenticated = false;
         let currentPlayoffSeriesId = null;
         let editingMatchId = null;
         let currentMatchFilter = 'all';
         let currentPastSeasonId = null;
         
-        // Ice Rink variables (только карта, без ленты)
+        // Ice Rink variables
         let currentMatchForRink = null;
         let rinkCanvas = null;
         let rinkCtx = null;
@@ -3924,6 +4091,43 @@
             hideInstallPrompt();
             localStorage.setItem('dhl_pwa_dismissed', 'true');
         }
+        
+        // ==================== БЕЗОПАСНОСТЬ (CSP, проверка происхождения) ====================
+        
+        function checkSecurityHeaders() {
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+                console.warn('Небезопасное соединение! Рекомендуется использовать HTTPS.');
+                showNotification('Внимание: соединение не защищено. Рекомендуем использовать HTTPS.', 'info');
+            }
+            if (window.self !== window.top) {
+                console.warn('Сайт загружен в iframe!');
+            }
+        }
+        
+        function setSecurityMetaTags() {
+            let meta = document.createElement('meta');
+            meta.httpEquiv = 'Content-Security-Policy';
+            meta.content = "default-src 'self' https: http: data: blob:; script-src 'self' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https: http:; connect-src 'self' https: http: wss:; frame-src 'self' https:; font-src 'self' https: data:;";
+            document.head.appendChild(meta);
+            
+            meta = document.createElement('meta');
+            meta.httpEquiv = 'X-Content-Type-Options';
+            meta.content = 'nosniff';
+            document.head.appendChild(meta);
+            
+            meta = document.createElement('meta');
+            meta.httpEquiv = 'X-Frame-Options';
+            meta.content = 'SAMEORIGIN';
+            document.head.appendChild(meta);
+            
+            meta = document.createElement('meta');
+            meta.httpEquiv = 'Referrer-Policy';
+            meta.content = 'strict-origin-when-cross-origin';
+            document.head.appendChild(meta);
+        }
+        
+        checkSecurityHeaders();
+        setSecurityMetaTags();
         
         // ==================== FIREBASE ====================
         
@@ -4213,8 +4417,8 @@
             ];
             
             leagueData.news = [
-                { id: 1, title: "Старт нового сезона!", content: "Сегодня официально стартовал новый сезон Драконьей Хоккейной Лиги. 16 команд готовы сражаться за Кубок Холодного Пути.", date: new Date().toLocaleDateString('ru-RU'), image: null, views: 0 },
-                { id: 2, title: "Новые правила", content: "В этом сезоне: 3 очка за победу, 2 за победу в ОТ, 1 за поражение в ОТ.", date: new Date().toLocaleDateString('ru-RU'), image: null, views: 0 }
+                { id: 1, title: "Старт нового сезона!", content: "Сегодня официально стартовал новый сезон Драконьей Хоккейной Лиги. 16 команд готовы сражаться за Кубок Холодного Пути.", date: new Date().toLocaleDateString('ru-RU'), image: null, bgColor: "red", views: 0 },
+                { id: 2, title: "Новые правила", content: "В этом сезоне: 3 очка за победу, 2 за победу в ОТ, 1 за поражение в ОТ.", date: new Date().toLocaleDateString('ru-RU'), image: null, bgColor: "blue", views: 0 }
             ];
             
             leagueData.content.customTexts = {
@@ -4229,6 +4433,132 @@
             leagueData.legends = [];
             
             saveToLocalStorage();
+        }
+        
+        // ==================== НОВАЯ СИМУЛЯЦИЯ (шанс андердога) ====================
+        
+        function getTeamStrengthWithUpset(teamId) {
+            const team = leagueData.teams.find(t => t.id === teamId);
+            if (!team) return 50;
+            const sorted = [...leagueData.teams].sort((a, b) => b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
+            const rank = sorted.findIndex(t => t.id === teamId) + 1;
+            const totalTeams = leagueData.teams.length;
+            const rankBonus = ((totalTeams - rank) / totalTeams) * 30;
+            const pointsBonus = Math.min(team.points * 2, 20);
+            const goalDiffBonus = Math.min((team.goalsFor - team.goalsAgainst) * 2, 10);
+            let strength = 40 + rankBonus + pointsBonus + goalDiffBonus;
+            strength = Math.max(20, Math.min(80, strength));
+            return strength;
+        }
+        
+        function simulateMatchScoreWithUpset(homeId, awayId) {
+            let homeStr = getTeamStrengthWithUpset(homeId);
+            let awayStr = getTeamStrengthWithUpset(awayId);
+            
+            const upsetFactor = 0.25;
+            const randomFactorHome = 1 + (Math.random() - 0.5) * upsetFactor;
+            const randomFactorAway = 1 + (Math.random() - 0.5) * upsetFactor;
+            homeStr = homeStr * randomFactorHome;
+            awayStr = awayStr * randomFactorAway;
+            
+            const homeAdv = 1.1;
+            let homeScore = Math.floor(Math.random() * 4 * homeStr / 50 * homeAdv);
+            let awayScore = Math.floor(Math.random() * 4 * awayStr / 50);
+            
+            homeScore = Math.min(homeScore, 12);
+            awayScore = Math.min(awayScore, 12);
+            
+            let overtime = false;
+            if (homeScore === awayScore) {
+                overtime = Math.random() < 0.3;
+                if (overtime) {
+                    Math.random() > 0.5 ? homeScore++ : awayScore++;
+                } else {
+                    Math.random() > 0.5 ? homeScore++ : awayScore++;
+                }
+            }
+            return { homeScore, awayScore, overtime };
+        }
+        
+        function getTeamStrength(teamId) {
+            return getTeamStrengthWithUpset(teamId);
+        }
+        
+        function simulateMatchScore(homeId, awayId) {
+            return simulateMatchScoreWithUpset(homeId, awayId);
+        }
+        
+        // ==================== АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ ПЛЕЙ-ОФФ ====================
+        
+        function autoUpdatePlayoffTeams() {
+            if (!leagueData.playoff.series.length) return;
+            const sorted = [...leagueData.teams].sort((a, b) => b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
+            const top8 = sorted.slice(0, 8);
+            if (top8.length < 8) return;
+            
+            const qf = leagueData.playoff.series.filter(s => s.round === 1);
+            if (qf.length !== 4) return;
+            
+            const anyGamePlayed = qf.some(s => s.games.some(g => g.completed));
+            if (anyGamePlayed) return;
+            
+            const pairs = [[0,7], [1,6], [2,5], [3,4]];
+            pairs.forEach((p, i) => {
+                if (i < qf.length) {
+                    qf[i].team1Id = top8[p[0]].id;
+                    qf[i].team2Id = top8[p[1]].id;
+                    qf[i].games.forEach((g, gi) => {
+                        g.homeTeamId = gi % 2 === 0 ? top8[p[0]].id : top8[p[1]].id;
+                        g.awayTeamId = gi % 2 === 0 ? top8[p[1]].id : top8[p[0]].id;
+                    });
+                    qf[i].team1Wins = 0;
+                    qf[i].team2Wins = 0;
+                    qf[i].winnerId = null;
+                }
+            });
+            
+            const sf = leagueData.playoff.series.filter(s => s.round === 2);
+            sf.forEach(s => {
+                s.team1Id = null;
+                s.team2Id = null;
+                s.team1Wins = 0;
+                s.team2Wins = 0;
+                s.winnerId = null;
+                s.games.forEach(g => { g.homeTeamId = null; g.awayTeamId = null; g.homeScore = 0; g.awayScore = 0; g.completed = false; g.overtime = false; });
+            });
+            
+            const finalSeries = leagueData.playoff.series.find(s => s.round === 3);
+            if (finalSeries) {
+                finalSeries.team1Id = null;
+                finalSeries.team2Id = null;
+                finalSeries.team1Wins = 0;
+                finalSeries.team2Wins = 0;
+                finalSeries.winnerId = null;
+                finalSeries.games.forEach(g => { g.homeTeamId = null; g.awayTeamId = null; g.homeScore = 0; g.awayScore = 0; g.completed = false; g.overtime = false; });
+            }
+            
+            leagueData.playoff.stage = "first_round";
+            leagueData.playoff.champion = null;
+            
+            updatePlayoffBracket();
+            updatePlayoffStats();
+            saveToLocalStorage();
+            if (isFirebaseConnected) saveDataToFirebase();
+        }
+        
+        function manualUpdatePlayoffTeams() {
+            if (!isAdminAuthenticated) return;
+            autoUpdatePlayoffTeams();
+            showNotification('Команды плей-офф обновлены!', 'success');
+            if (leagueData.playoff.series.length) updatePlayoffBracket();
+            else showNotification('Сначала создайте сетку плей-офф!', 'info');
+        }
+        
+        function updateTeamStatsAfterMatch(match) {
+            recalculateAllTeamStats();
+            autoUpdatePlayoffTeams();
+            saveToLocalStorage();
+            if (isFirebaseConnected) saveDataToFirebase();
         }
         
         // ==================== ОБНОВЛЕНИЕ UI ====================
@@ -4274,13 +4604,11 @@
                 clubAdminControls.style.display = display;
             }
             
-            // Скрываем кнопку удаления сезона для обычных пользователей
             const deleteSeasonBtn = document.getElementById('deletePastSeasonBtn');
             if (deleteSeasonBtn) {
                 deleteSeasonBtn.style.display = isAdminAuthenticated ? 'flex' : 'none';
             }
             
-            // Скрываем кнопки управления плей-офф для обычных пользователей
             const playoffMatchActions = document.getElementById('playoffMatchActions');
             if (playoffMatchActions) {
                 playoffMatchActions.style.display = isAdminAuthenticated ? 'flex' : 'none';
@@ -4367,6 +4695,66 @@
             }
         }
         
+        // ==================== НОВОСТИ С ФОРМАТИРОВАНИЕМ И ЦВЕТАМИ ====================
+        
+        function getColorStyle(bgColor) {
+            const colors = {
+                red: 'linear-gradient(145deg, #4a0000, #6b0000)',
+                blue: 'linear-gradient(145deg, #001a4a, #002d6b)',
+                green: 'linear-gradient(145deg, #004d1a, #006b24)',
+                black: 'linear-gradient(145deg, #1a1a1a, #2a2a2a)',
+                yellow: 'linear-gradient(145deg, #4d4d00, #6b6b00)',
+                purple: 'linear-gradient(145deg, #2e004d, #4a006b)',
+                pink: 'linear-gradient(145deg, #4d1a3a, #6b2450)',
+                orange: 'linear-gradient(145deg, #4d1f00, #6b2c00)',
+                gold: 'linear-gradient(145deg, #4d3d00, #6b5300)',
+                brown: 'linear-gradient(145deg, #3d1a00, #5c2600)',
+                lightgreen: 'linear-gradient(145deg, #1a4d2e, #266b40)'
+            };
+            return colors[bgColor] || colors.red;
+        }
+        
+        function createNewsCard(news) {
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            if (news.image) {
+                card.innerHTML = `
+                    <img src="${news.image}" class="news-image" onclick="showImageModal('${news.image}')">
+                    <div class="news-content">
+                        <span class="news-date">${news.date}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-text">${stripHtml(news.content).substring(0, 150)}...</p>
+                        <div style="display:flex;justify-content:space-between;">
+                            <button class="read-more-btn" onclick="openNewsModal(${news.id})"><i class="fas fa-book-open"></i> Читать</button>
+                            <div class="news-views"><i class="fas fa-eye"></i><span>${getNewsViews(news.id)}</span></div>
+                        </div>
+                    </div>`;
+            } else {
+                const bgColor = news.bgColor || 'red';
+                const bgStyle = getColorStyle(bgColor);
+                card.innerHTML = `
+                    <div class="news-image-placeholder" style="background: ${bgStyle}; border-bottom: 3px solid black;">
+                        <i class="fas fa-newspaper" style="font-size: 4rem; color: white; text-shadow: 0 0 10px rgba(0,0,0,0.5);"></i>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-date">${news.date}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-text">${stripHtml(news.content).substring(0, 150)}...</p>
+                        <div style="display:flex;justify-content:space-between;">
+                            <button class="read-more-btn" onclick="openNewsModal(${news.id})"><i class="fas fa-book-open"></i> Читать</button>
+                            <div class="news-views"><i class="fas fa-eye"></i><span>${getNewsViews(news.id)}</span></div>
+                        </div>
+                    </div>`;
+            }
+            return card;
+        }
+        
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+        
         function updateNews() {
             const latestNews = document.getElementById('latestNews');
             const allNews = document.getElementById('allNews');
@@ -4374,58 +4762,23 @@
             if (allNews) { allNews.innerHTML = ''; leagueData.news.forEach(n => allNews.appendChild(createNewsCard(n))); }
         }
         
-        function createNewsCard(news) {
-            const card = document.createElement('div');
-            card.className = 'news-card';
-            card.innerHTML = `
-                ${news.image ? `<img src="${news.image}" class="news-image" onclick="showImageModal('${news.image}')">` : `<div class="news-image" style="background:var(--metal-dark);display:flex;align-items:center;justify-content:center;"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--metal-border);"></i></div>`}
-                <div class="news-content">
-                    <span class="news-date">${news.date}</span>
-                    <h3 class="news-title">${news.title}</h3>
-                    <p class="news-text">${news.content.substring(0, 150)}...</p>
-                    <div style="display:flex;justify-content:space-between;">
-                        <button class="read-more-btn" onclick="openNewsModal(${news.id})"><i class="fas fa-book-open"></i> Читать</button>
-                        <div class="news-views"><i class="fas fa-eye"></i><span>${getNewsViews(news.id)}</span></div>
-                    </div>
-                </div>`;
-            return card;
+        function formatNewsText(type, isAdd = false) {
+            const textarea = isAdd ? document.getElementById('addNewsContent') : document.getElementById('editNewsContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selected = textarea.value.substring(start, end);
+            let wrapped = '';
+            if (type === 'bold') wrapped = `<strong>${selected}</strong>`;
+            else if (type === 'underline') wrapped = `<u>${selected}</u>`;
+            else if (type === 'indent') wrapped = `<p>${selected}</p>`;
+            const newValue = textarea.value.substring(0, start) + wrapped + textarea.value.substring(end);
+            textarea.value = newValue;
+            textarea.focus();
+            textarea.setSelectionRange(start + wrapped.length, start + wrapped.length);
         }
         
-        function updateStats() {
-            let goals = 0, played = 0, ot = 0;
-            leagueData.matches.forEach(m => { if (m.completed) { goals += m.homeScore + m.awayScore; played++; if (m.overtime) ot++; } });
-            document.getElementById('totalGoals').textContent = goals;
-            document.getElementById('avgGoals').textContent = played ? (goals / played).toFixed(1) : '0.0';
-            document.getElementById('totalMatchesPlayed').textContent = played;
-            document.getElementById('overtimeMatches').textContent = ot;
-        }
-        
-        function updateTextBlocks() {
-            if (leagueData.content.customTexts) {
-                for (const id in leagueData.content.customTexts) {
-                    const el = document.getElementById(id + 'Content');
-                    if (el) el.innerHTML = leagueData.content.customTexts[id];
-                }
-            }
-        }
-        
-        function loadNewsViews() {
-            const saved = localStorage.getItem('dhl_news_views');
-            if (saved) newsViews = JSON.parse(saved);
-        }
-        
-        function saveNewsViews() { localStorage.setItem('dhl_news_views', JSON.stringify(newsViews)); }
-        
-        function incrementNewsViews(id) {
-            if (!newsViews[id]) newsViews[id] = 0;
-            newsViews[id]++;
-            saveNewsViews();
-            const news = leagueData.news.find(n => n.id === id);
-            if (news) { news.views = (news.views || 0) + 1; saveToLocalStorage(); }
-            return newsViews[id];
-        }
-        
-        function getNewsViews(id) { return newsViews[id] || 0; }
+        function formatNewsTextAdd(type) { formatNewsText(type, true); }
+        function formatAddNewsText(type) { formatNewsText(type, true); }
         
         function openNewsModal(id) {
             const news = leagueData.news.find(n => n.id === id);
@@ -4561,8 +4914,54 @@
             reader.onload = (ev) => { editTeamLogoDataURL = ev.target.result; document.getElementById('editTeamLogoPreview').src = ev.target.result; document.getElementById('editTeamLogoPreview').style.display = 'block'; };
             reader.readAsDataURL(file);
         }
-        // ==================== НОВОСТИ ====================
-
+        
+        // ==================== НОВОСТИ (АДМИН) ====================
+        
+        function openAddNewsModal() {
+            document.getElementById('addNewsTitle').value = '';
+            document.getElementById('addNewsContent').value = '';
+            document.getElementById('addNewsImagePreview').style.display = 'none';
+            document.getElementById('addNewsImageUpload').value = '';
+            addNewsImageDataURL = null;
+            document.getElementById('addNewsModal').style.display = 'flex';
+        }
+        
+        function closeAddNewsModal() { document.getElementById('addNewsModal').style.display = 'none'; }
+        
+        function handleAddNewsImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => { addNewsImageDataURL = ev.target.result; document.getElementById('addNewsImagePreview').src = ev.target.result; document.getElementById('addNewsImagePreview').style.display = 'block'; };
+            reader.readAsDataURL(file);
+        }
+        
+        async function saveAddNews() {
+            if (!isAdminAuthenticated) return;
+            const title = document.getElementById('addNewsTitle').value.trim();
+            const content = document.getElementById('addNewsContent').value.trim();
+            const bgColor = document.getElementById('addNewsColor').value;
+            if (!title || !content) { showNotification('Заполните заголовок и текст!', 'error'); return; }
+            try {
+                showLoader('globalLoader', true);
+                let image = null;
+                if (addNewsImageDataURL) {
+                    const file = dataURLtoFile(addNewsImageDataURL, `news_${Date.now()}.jpg`);
+                    image = await uploadImageToImgBB(file, 'news');
+                }
+                const newNews = {
+                    id: Math.max(...leagueData.news.map(n => n.id), 0) + 1,
+                    title, content, date: new Date().toLocaleDateString('ru-RU'), image, bgColor, views: 0
+                };
+                leagueData.news.unshift(newNews);
+                updateUI(); updateNewsList(); saveToLocalStorage();
+                if (isFirebaseConnected) await saveDataToFirebase();
+                closeAddNewsModal();
+                showNotification('Новость добавлена!', 'success');
+            } catch (e) { showNotification('Ошибка: ' + e.message, 'error'); }
+            finally { showLoader('globalLoader', false); }
+        }
+        
         function handleNewsImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -4570,7 +4969,7 @@
             reader.onload = (ev) => { uploadedNewsImageDataURL = ev.target.result; document.getElementById('newsImagePreview').src = ev.target.result; document.getElementById('newsImagePreview').style.display = 'block'; };
             reader.readAsDataURL(file);
         }
-
+        
         function handleEditNewsImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -4578,40 +4977,7 @@
             reader.onload = (ev) => { editNewsImageDataURL = ev.target.result; document.getElementById('editNewsImagePreview').src = ev.target.result; document.getElementById('editNewsImagePreview').style.display = 'block'; };
             reader.readAsDataURL(file);
         }
-
-        function clearNewsImagePreview() {
-            uploadedNewsImageDataURL = null;
-            document.getElementById('newsImagePreview').style.display = 'none';
-            document.getElementById('newsImageUpload').value = '';
-        }
-
-        async function addNews() {
-            if (!isAdminAuthenticated) return;
-            const title = document.getElementById('newsTitle').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
-            if (!title || !content) { showNotification('Заполните заголовок и текст!', 'error'); return; }
-            try {
-                showLoader('globalLoader', true);
-                let image = null;
-                if (uploadedNewsImageDataURL) {
-                    const file = dataURLtoFile(uploadedNewsImageDataURL, `news_${Date.now()}.jpg`);
-                    image = await uploadImageToImgBB(file, 'news');
-                }
-                const newNews = {
-                    id: Math.max(...leagueData.news.map(n => n.id), 0) + 1,
-                    title, content, date: new Date().toLocaleDateString('ru-RU'), image, views: 0
-                };
-                leagueData.news.unshift(newNews);
-                updateUI(); updateNewsList(); saveToLocalStorage();
-                if (isFirebaseConnected) await saveDataToFirebase();
-                document.getElementById('newsTitle').value = '';
-                document.getElementById('newsContent').value = '';
-                clearNewsImagePreview();
-                showNotification('Новость добавлена!', 'success');
-            } catch (e) { showNotification('Ошибка: ' + e.message, 'error'); }
-            finally { showLoader('globalLoader', false); }
-        }
-
+        
         function editNews(newsId) {
             if (!isAdminAuthenticated) return;
             const news = leagueData.news.find(n => n.id === newsId);
@@ -4619,22 +4985,24 @@
             editingNewsId = newsId;
             document.getElementById('editNewsTitle').value = news.title;
             document.getElementById('editNewsContent').value = news.content;
+            document.getElementById('editNewsColor').value = news.bgColor || 'red';
             const preview = document.getElementById('editNewsImagePreview');
             if (news.image) { preview.src = news.image; preview.style.display = 'block'; } else { preview.style.display = 'none'; }
             editNewsImageDataURL = null;
             document.getElementById('editNewsModal').style.display = 'flex';
         }
-
+        
         async function saveNewsEdit() {
             if (!isAdminAuthenticated) return;
             const news = leagueData.news.find(n => n.id === editingNewsId);
             if (!news) return;
             const title = document.getElementById('editNewsTitle').value.trim();
             const content = document.getElementById('editNewsContent').value.trim();
+            const bgColor = document.getElementById('editNewsColor').value;
             if (!title || !content) { showNotification('Заполните поля!', 'error'); return; }
             try {
                 showLoader('globalLoader', true);
-                news.title = title; news.content = content; news.date = new Date().toLocaleDateString('ru-RU');
+                news.title = title; news.content = content; news.date = new Date().toLocaleDateString('ru-RU'); news.bgColor = bgColor;
                 if (editNewsImageDataURL) {
                     const file = dataURLtoFile(editNewsImageDataURL, `news_${Date.now()}.jpg`);
                     news.image = await uploadImageToImgBB(file, 'news');
@@ -4646,9 +5014,9 @@
             } catch (e) { showNotification('Ошибка: ' + e.message, 'error'); }
             finally { showLoader('globalLoader', false); }
         }
-
+        
         function closeEditNewsModal() { editingNewsId = null; document.getElementById('editNewsModal').style.display = 'none'; }
-
+        
         function deleteNews(newsId) {
             if (!isAdminAuthenticated) return;
             if (!confirm('Удалить новость?')) return;
@@ -4657,7 +5025,7 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Новость удалена!', 'success');
         }
-
+        
         function updateNewsList() {
             const list = document.getElementById('adminNewsList');
             const count = document.getElementById('newsCount');
@@ -4676,9 +5044,9 @@
                 list.appendChild(item);
             });
         }
-
+        
         // ==================== КОНТЕНТ ====================
-
+        
         function handleLeagueLogoUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -4686,7 +5054,7 @@
             reader.onload = (ev) => { uploadedLeagueLogoDataURL = ev.target.result; document.getElementById('leagueLogoPreview').src = ev.target.result; document.getElementById('leagueLogoPreview').style.display = 'block'; };
             reader.readAsDataURL(file);
         }
-
+        
         function saveContentChanges() {
             if (!isAdminAuthenticated) return;
             leagueData.name = document.getElementById('leagueName').value;
@@ -4697,7 +5065,7 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Изменения сохранены!', 'success');
         }
-
+        
         function editTextBlock(blockId) {
             if (!isAdminAuthenticated) return;
             editingTextBlockId = blockId;
@@ -4707,7 +5075,7 @@
             let text = leagueData.content.customTexts?.[blockId] || document.getElementById(blockId + 'Content').innerHTML;
             textarea.value = text.replace(/<br\s*\/?>/gi, '\n');
         }
-
+        
         function saveTextBlock(blockId) {
             if (!isAdminAuthenticated) return;
             const textarea = document.getElementById(blockId + 'Textarea');
@@ -4722,18 +5090,18 @@
             cancelEditText(blockId);
             showNotification('Текст сохранен!', 'success');
         }
-
+        
         function cancelEditText(blockId) {
             editingTextBlockId = null;
             document.getElementById(blockId + 'Editor').style.display = 'none';
             document.getElementById(blockId + 'Content').style.display = 'block';
         }
-
-        // ==================== БЕЗОПАСНОСТЬ ====================
-
+        
+        // ==================== БЕЗОПАСНОСТЬ И АДМИН ====================
+        
         function accessAdminFromLogo() { document.getElementById('passwordModal').style.display = 'flex'; }
         function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
-
+        
         function checkAdminPassword() {
             const input = document.getElementById('adminPasswordInput').value;
             if (input === leagueData.settings.adminPassword) {
@@ -4742,18 +5110,15 @@
                 document.getElementById('adminPanel').classList.add('active');
                 updateEditButtonsVisibility();
                 showNotification('Доступ разрешен!', 'success');
-                // Обновляем UI для скрытия/показа админских кнопок
                 updateUI();
             } else {
                 document.getElementById('passwordError').style.display = 'block';
                 setTimeout(() => document.getElementById('passwordError').style.display = 'none', 3000);
             }
         }
-
-        function exitAdminPanel() { 
-            document.getElementById('adminPanel').classList.remove('active'); 
-        }
-
+        
+        function exitAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
+        
         function logoutAdmin() {
             isAdminAuthenticated = false;
             document.getElementById('adminPanel').classList.remove('active');
@@ -4761,7 +5126,7 @@
             showNotification('Вы вышли из админ-панели.', 'info');
             updateUI();
         }
-
+        
         function switchAdminTab(tabId) {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
@@ -4774,9 +5139,9 @@
             else if (tabId === 'pastSeasons') updatePastSeasonsAdminList();
             else if (tabId === 'legends') updateLegendsAdminList();
         }
-
+        
         function toggleAdminPanelPosition() { document.getElementById('adminPanel').classList.toggle('left-side'); }
-
+        
         function changeAdminPassword() {
             if (!isAdminAuthenticated) return;
             const cur = document.getElementById('currentPassword').value;
@@ -4793,21 +5158,9 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Пароль изменен!', 'success');
         }
-
-        // ==================== МАТЧИ - ГЕНЕРАЦИЯ И СИМУЛЯЦИЯ ====================
-
-        function getTeamStrength(teamId) {
-            const team = leagueData.teams.find(t => t.id === teamId);
-            if (!team) return 50;
-            const sorted = [...leagueData.teams].sort((a, b) => b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
-            const rank = sorted.findIndex(t => t.id === teamId) + 1;
-            const totalTeams = leagueData.teams.length;
-            const rankBonus = ((totalTeams - rank) / totalTeams) * 30;
-            const pointsBonus = Math.min(team.points * 2, 20);
-            const goalDiffBonus = Math.min((team.goalsFor - team.goalsAgainst) * 2, 10);
-            return 40 + rankBonus + pointsBonus + goalDiffBonus;
-        }
-
+        
+        // ==================== МАТЧИ ====================
+        
         function generateCommentary(playerName, period, minute, isHome) {
             const actions = [
                 "мощным броском", "точным кистевым", "после рикошета", "в пустые ворота", "с неудобной руки",
@@ -4818,14 +5171,14 @@
             const assistAction = assists[Math.floor(Math.random() * assists.length)];
             return `${playerName} ${action} ${assistAction} партнера!`;
         }
-
+        
         function getGameTime(period, minute) {
             if (period === "1-й период") return minute * 60;
             if (period === "2-й период") return 1200 + minute * 60;
             if (period === "3-й период") return 2400 + minute * 60;
             return 3600 + minute * 60;
         }
-
+        
         function generateGoalScorers(homeId, awayId, homeScore, awayScore) {
             const scorers = [];
             const firstNames = ["Александр", "Дмитрий", "Максим", "Иван", "Сергей", "Андрей", "Егор", "Никита", "Артем", "Михаил"];
@@ -4848,7 +5201,7 @@
             }
             return scorers.sort((a, b) => a.gameTime - b.gameTime);
         }
-
+        
         function generateMatchEvents(homeId, awayId, homeScore, awayScore, goalScorers) {
             const events = [];
             goalScorers.forEach((scorer, idx) => {
@@ -4880,29 +5233,13 @@
             }
             return events.sort((a, b) => a.time - b.time);
         }
-
-        function simulateMatchScore(homeId, awayId) {
-            const homeStr = getTeamStrength(homeId);
-            const awayStr = getTeamStrength(awayId);
-            const homeAdv = 1 + (homeStr - awayStr) / 50;
-            const awayAdv = 1 + (awayStr - homeStr) / 50;
-            let homeScore = Math.floor(Math.random() * 4 * homeAdv);
-            let awayScore = Math.floor(Math.random() * 4 * awayAdv);
-            let overtime = false;
-            if (homeScore === awayScore) {
-                overtime = Math.random() < 0.3;
-                if (overtime) Math.random() > 0.5 ? homeScore++ : awayScore++;
-                else Math.random() > 0.5 ? homeScore++ : awayScore++;
-            }
-            return { homeScore, awayScore, overtime };
-        }
-
+        
         function generateMatchDetails() {
             const d = new Date();
             d.setDate(d.getDate() + Math.floor(Math.random() * 14) - 7);
             return { date: d.toLocaleDateString('ru-RU'), timestamp: d.getTime(), time: `${12 + Math.floor(Math.random()*8)}:${Math.floor(Math.random()*60).toString().padStart(2,'0')}` };
         }
-
+        
         function generateRandomCalendar() {
             if (!isAdminAuthenticated) return;
             if (leagueData.teams.length < 2) { showNotification('Нужно хотя бы 2 команды!', 'error'); return; }
@@ -4925,30 +5262,25 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification(`Календарь создан! ${leagueData.matches.length} матчей.`, 'success');
         }
-
+        
         function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
-
-        function updateTeamStats(match) {
-            if (!match.completed) return;
-            const home = leagueData.teams.find(t => t.id === match.homeTeamId);
-            const away = leagueData.teams.find(t => t.id === match.awayTeamId);
-            if (!home || !away) return;
-            [home, away].forEach(t => { t.games = 0; t.wins = 0; t.otWins = 0; t.otLosses = 0; t.losses = 0; t.goalsFor = 0; t.goalsAgainst = 0; t.points = 0; t.last5 = []; });
-            leagueData.teams.forEach(team => { team.games = 0; team.wins = 0; team.otWins = 0; team.otLosses = 0; team.losses = 0; team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0; team.last5 = []; });
+        
+        function recalculateAllTeamStats() {
+            leagueData.teams.forEach(t => { t.games = 0; t.wins = 0; t.otWins = 0; t.otLosses = 0; t.losses = 0; t.goalsFor = 0; t.goalsAgainst = 0; t.points = 0; t.last5 = []; });
             leagueData.matches.forEach(m => {
                 if (!m.completed) return;
-                const h = leagueData.teams.find(t => t.id === m.homeTeamId);
-                const a = leagueData.teams.find(t => t.id === m.awayTeamId);
-                if (!h || !a) return;
-                h.games++; a.games++;
-                h.goalsFor += m.homeScore; h.goalsAgainst += m.awayScore;
-                a.goalsFor += m.awayScore; a.goalsAgainst += m.homeScore;
+                const home = leagueData.teams.find(t => t.id === m.homeTeamId);
+                const away = leagueData.teams.find(t => t.id === m.awayTeamId);
+                if (!home || !away) return;
+                home.games++; away.games++;
+                home.goalsFor += m.homeScore; home.goalsAgainst += m.awayScore;
+                away.goalsFor += m.awayScore; away.goalsAgainst += m.homeScore;
                 if (m.overtime) {
-                    if (m.homeScore > m.awayScore) { h.otWins++; a.otLosses++; h.points += 2; a.points += 1; h.last5.push('W'); a.last5.push('OTL'); }
-                    else { a.otWins++; h.otLosses++; a.points += 2; h.points += 1; a.last5.push('W'); h.last5.push('OTL'); }
+                    if (m.homeScore > m.awayScore) { home.otWins++; away.otLosses++; home.points += 2; away.points += 1; home.last5.push('W'); away.last5.push('OTL'); }
+                    else { away.otWins++; home.otLosses++; away.points += 2; home.points += 1; away.last5.push('W'); home.last5.push('OTL'); }
                 } else {
-                    if (m.homeScore > m.awayScore) { h.wins++; a.losses++; h.points += 3; h.last5.push('W'); a.last5.push('L'); }
-                    else { a.wins++; h.losses++; a.points += 3; a.last5.push('W'); h.last5.push('L'); }
+                    if (m.homeScore > m.awayScore) { home.wins++; away.losses++; home.points += 3; home.last5.push('W'); away.last5.push('L'); }
+                    else { away.wins++; home.losses++; away.points += 3; away.last5.push('W'); home.last5.push('L'); }
                 }
             });
             leagueData.teams.forEach(t => { if (t.last5.length > 5) t.last5 = t.last5.slice(-5); });
@@ -4956,30 +5288,25 @@
             if (isFirebaseConnected) saveDataToFirebase();
             updateStandings();
         }
-
-        function recalculateAllTeamStats() {
-            leagueData.teams.forEach(t => { t.games = 0; t.wins = 0; t.otWins = 0; t.otLosses = 0; t.losses = 0; t.goalsFor = 0; t.goalsAgainst = 0; t.points = 0; t.last5 = []; });
-            leagueData.matches.forEach(m => { if (m.completed) updateTeamStats(m); });
-        }
-
+        
         function simulateAllMatches() {
             if (!isAdminAuthenticated) return;
             leagueData.teams.forEach(t => { t.games = 0; t.wins = 0; t.otWins = 0; t.otLosses = 0; t.losses = 0; t.goalsFor = 0; t.goalsAgainst = 0; t.points = 0; t.last5 = []; });
             leagueData.matches.forEach(m => {
                 if (!m.completed) {
-                    const { homeScore, awayScore, overtime } = simulateMatchScore(m.homeTeamId, m.awayTeamId);
+                    const { homeScore, awayScore, overtime } = simulateMatchScoreWithUpset(m.homeTeamId, m.awayTeamId);
                     m.homeScore = homeScore; m.awayScore = awayScore; m.overtime = overtime; m.completed = true;
                     if (!m.date) { const d = generateMatchDetails(); m.date = d.date; m.timestamp = d.timestamp; m.time = d.time; }
                     m.goalScorers = generateGoalScorers(m.homeTeamId, m.awayTeamId, homeScore, awayScore);
                     m.events = generateMatchEvents(m.homeTeamId, m.awayTeamId, homeScore, awayScore, m.goalScorers);
                 }
             });
-            leagueData.matches.forEach(m => { if (m.completed) updateTeamStats(m); });
+            leagueData.matches.forEach(m => { if (m.completed) recalculateAllTeamStats(); });
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Все матчи сыграны!', 'success');
         }
-
+        
         function resetAllMatches() {
             if (!isAdminAuthenticated) return;
             if (!confirm('Сбросить все матчи?')) return;
@@ -4989,7 +5316,7 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Матчи сброшены!', 'success');
         }
-
+        
         function resetTournamentTable() {
             if (!isAdminAuthenticated) return;
             if (!confirm('Сбросить таблицу?')) return;
@@ -5000,7 +5327,7 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Таблица сброшена!', 'success');
         }
-
+        
         function resetTeamStats(teamId) {
             if (!isAdminAuthenticated) return;
             const team = leagueData.teams.find(t => t.id === teamId);
@@ -5011,15 +5338,15 @@
             forceRefreshAll();
             showNotification(`Статистика "${team.name}" сброшена!`, 'success');
         }
-
+        
         function resetAllTeamsStats() {
             if (!isAdminAuthenticated) return;
             if (!confirm('Сбросить статистику всех команд?')) return;
             leagueData.teams.forEach(t => resetTeamStats(t.id));
         }
-
+        
         // ==================== UI МАТЧЕЙ ====================
-
+        
         function updateEditableMatchesList() {
             const list = document.getElementById('adminMatchesList');
             if (!list) return;
@@ -5050,7 +5377,7 @@
             });
             updateMatchesStats();
         }
-
+        
         function toggleMatchEdit(id) {
             if (!isAdminAuthenticated) return;
             const m = leagueData.matches.find(x => x.id === id);
@@ -5064,7 +5391,7 @@
             if (isFirebaseConnected) saveDataToFirebase();
             updateStandings();
         }
-
+        
         function deleteMatch(id) {
             if (!isAdminAuthenticated) return;
             if (!confirm('Удалить матч?')) return;
@@ -5074,33 +5401,35 @@
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Матч удален!', 'success');
         }
-
+        
         function simulateSingleMatch(id) {
             if (!isAdminAuthenticated) return;
             const m = leagueData.matches.find(x => x.id === id);
             if (!m) return;
-            const { homeScore, awayScore, overtime } = simulateMatchScore(m.homeTeamId, m.awayTeamId);
+            const { homeScore, awayScore, overtime } = simulateMatchScoreWithUpset(m.homeTeamId, m.awayTeamId);
             m.homeScore = homeScore; m.awayScore = awayScore; m.overtime = overtime; m.completed = true;
             if (!m.date) { const d = generateMatchDetails(); m.date = d.date; m.timestamp = d.timestamp; m.time = d.time; }
             m.goalScorers = generateGoalScorers(m.homeTeamId, m.awayTeamId, homeScore, awayScore);
             m.events = generateMatchEvents(m.homeTeamId, m.awayTeamId, homeScore, awayScore, m.goalScorers);
             recalculateAllTeamStats();
+            autoUpdatePlayoffTeams();
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification(`Матч симулирован: ${homeScore}:${awayScore}${overtime?' (ОТ)':''}`, 'success');
         }
-
+        
         function resetMatch(id) {
             if (!isAdminAuthenticated) return;
             const m = leagueData.matches.find(x => x.id === id);
             if (!m) return;
             m.homeScore = 0; m.awayScore = 0; m.overtime = false; m.completed = false; m.goalScorers = []; m.events = [];
             recalculateAllTeamStats();
+            autoUpdatePlayoffTeams();
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Матч сброшен!', 'success');
         }
-
+        
         function saveMatchScore(id) {
             if (!isAdminAuthenticated) return;
             const m = leagueData.matches.find(x => x.id === id);
@@ -5117,11 +5446,12 @@
                 m.events = generateMatchEvents(m.homeTeamId, m.awayTeamId, hs, as, m.goalScorers);
             }
             recalculateAllTeamStats();
+            autoUpdatePlayoffTeams();
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Счет сохранен!', 'success');
         }
-
+        
         function updateMatchesStats() {
             let sched = 0, played = 0, goals = 0, ot = 0;
             leagueData.matches.forEach(m => {
@@ -5132,14 +5462,14 @@
             document.getElementById('totalGoalsCount').textContent = goals;
             document.getElementById('overtimeMatchesCount').textContent = ot;
         }
-
+        
         function populateTeamSelects() {
             const hs = document.getElementById('matchHomeTeam'), as = document.getElementById('matchAwayTeam');
             if (!hs || !as) return;
             hs.innerHTML = as.innerHTML = '<option value="">Выберите</option>';
             leagueData.teams.forEach(t => { hs.add(new Option(t.name, t.id)); as.add(new Option(t.name, t.id)); });
         }
-
+        
         function addMatchManually() {
             if (!isAdminAuthenticated) return;
             const home = document.getElementById('matchHomeTeam').value;
@@ -5159,12 +5489,12 @@
                 events: generateMatchEvents(parseInt(home), parseInt(away), hs, as, generateGoalScorers(parseInt(home), parseInt(away), hs, as))
             };
             leagueData.matches.push(newMatch);
-            updateTeamStats(newMatch);
+            recalculateAllTeamStats();
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Матч добавлен!', 'success');
         }
-
+        
         function updateMatchesUI() {
             const cont = document.getElementById('matchesContainer');
             if (!cont) return;
@@ -5193,7 +5523,7 @@
                 cont.appendChild(card);
             });
         }
-
+        
         function filterMatches(type) {
             currentMatchFilter = type;
             document.querySelectorAll('.match-filter-btn').forEach(b => {
@@ -5202,7 +5532,7 @@
             });
             updateMatchesUI();
         }
-
+        
         function editMatchScoreInCalendar(id) {
             if (!isAdminAuthenticated) return;
             const m = leagueData.matches.find(x => x.id === id);
@@ -5222,20 +5552,20 @@
             document.getElementById('editMatchRound').textContent = `Тур ${m.round||1}`;
             document.getElementById('editMatchModal').style.display = 'flex';
         }
-
+        
         function closeEditMatchModal() { editingMatchId = null; document.getElementById('editMatchModal').style.display = 'none'; }
-
+        
         function simulateCalendarMatch() {
             if (!isAdminAuthenticated || !editingMatchId) return;
             const m = leagueData.matches.find(x => x.id === editingMatchId);
             if (!m) return;
-            const { homeScore, awayScore, overtime } = simulateMatchScore(m.homeTeamId, m.awayTeamId);
+            const { homeScore, awayScore, overtime } = simulateMatchScoreWithUpset(m.homeTeamId, m.awayTeamId);
             document.getElementById('editMatchHomeScore').value = homeScore;
             document.getElementById('editMatchAwayScore').value = awayScore;
             document.getElementById('editMatchOvertime').checked = overtime;
             document.getElementById('editMatchCompleted').checked = true;
         }
-
+        
         function saveCalendarMatchScore() {
             if (!isAdminAuthenticated || !editingMatchId) return;
             const m = leagueData.matches.find(x => x.id === editingMatchId);
@@ -5253,12 +5583,13 @@
             }
             closeEditMatchModal();
             recalculateAllTeamStats();
+            autoUpdatePlayoffTeams();
             forceRefreshAll();
             if (isFirebaseConnected) saveDataToFirebase();
             showNotification('Счет сохранен!', 'success');
         }
-
-        // ==================== ДЕТАЛИ МАТЧА + КАРТА ПОЛЯ (без ленты, с названиями команд в центре) ====================
+        
+        // ==================== ДЕТАЛИ МАТЧА + КАРТА ПОЛЯ (адаптация под овертайм) ====================
         
         function updateLiveScore(match, time) {
             if (!match.goalScorers) return;
@@ -5276,7 +5607,7 @@
             const liveScorePeriod = document.getElementById('liveScorePeriod');
             if (liveScorePeriod) liveScorePeriod.textContent = `${period}, ${mins}:${secs.toString().padStart(2,'0')}`;
         }
-
+        
         function openMatchDetailsModal(id) {
             const m = leagueData.matches.find(x => x.id === id);
             if (!m || !m.completed) { showMatchPrediction(id); return; }
@@ -5315,12 +5646,12 @@
             
             document.getElementById('matchDetailsModal').style.display = 'flex';
         }
-
+        
         function closeMatchDetailsModal() {
             stopTimeline();
             document.getElementById('matchDetailsModal').style.display = 'none';
         }
-
+        
         function showMatchPrediction(id) {
             const m = leagueData.matches.find(x => x.id === id);
             if (!m) return;
@@ -5339,20 +5670,25 @@
             document.getElementById('predictionDraw').textContent = `Вероятность овертайма: ${Math.round((1 - Math.abs(hStr-aStr)/total)*30)}%`;
             document.getElementById('matchPredictionModal').style.display = 'flex';
         }
-
+        
         function closeMatchPredictionModal() { document.getElementById('matchPredictionModal').style.display = 'none'; }
-
-        // Функции карты поля (без ленты событий, с названиями команд в центре)
+        
+        // Функции карты поля (адаптация под овертайм)
         function initIceRink(match) {
             rinkCanvas = document.getElementById('iceRinkCanvas');
             if (!rinkCanvas) return;
             rinkCtx = rinkCanvas.getContext('2d');
             const slider = document.getElementById('timelineSlider');
-            const maxTime = match.events?.length ? Math.max(...match.events.map(e => e.time)) : 3600;
-            slider.max = maxTime;
+            const maxTime = match.overtime ? 3900 : 3600;
+            if (match.events?.length) {
+                const maxEventTime = Math.max(...match.events.map(e => e.time));
+                slider.max = Math.max(maxTime, maxEventTime);
+            } else {
+                slider.max = maxTime;
+            }
             slider.value = 0;
             currentTimelineValue = 0;
-            updateTimelineDisplay(0, maxTime);
+            updateTimelineDisplay(0, slider.max);
             drawRinkAtTime(match, 0);
             updateLiveScore(match, 0);
             
@@ -5361,14 +5697,14 @@
             newSlider.id = 'timelineSlider';
             newSlider.oninput = () => {
                 currentTimelineValue = parseInt(newSlider.value);
-                updateTimelineDisplay(currentTimelineValue, maxTime);
+                updateTimelineDisplay(currentTimelineValue, newSlider.max);
                 drawRinkAtTime(match, currentTimelineValue);
                 updateLiveScore(match, currentTimelineValue);
                 if (isPlaying) stopTimeline();
             };
             stopTimeline();
         }
-
+        
         function showGoalNotification(teamName) {
             const notificationDiv = document.getElementById('goalNotification');
             if (!notificationDiv) return;
@@ -5379,7 +5715,7 @@
                 notificationDiv.style.opacity = '0';
             }, 2000);
         }
-
+        
         function drawRinkAtTime(match, time) {
             if (!rinkCtx) return;
             rinkCtx.clearRect(0, 0, 800, 400);
@@ -5490,7 +5826,7 @@
                 }
             }
             
-            // ОПРЕДЕЛЯЕМ АТАКУЮЩУЮ КОМАНДУ (по последнему событию)
+            // Определяем атакующую команду
             let attackingTeamId = match.homeTeamId;
             if (events.length) {
                 attackingTeamId = events[events.length-1].teamId;
@@ -5498,10 +5834,9 @@
             const attackingTeam = leagueData.teams.find(t => t.id === attackingTeamId);
             const teamName = attackingTeam ? attackingTeam.name : (attackingTeamId === match.homeTeamId ? match.homeTeamId : match.awayTeamId);
             
-            // Цвет атаки
             const attackColor = attackingTeamId === match.homeTeamId ? '#0066ff' : '#ff0033';
             
-            // НАДПИСЬ "АТАКУЕТ [НАЗВАНИЕ КОМАНДЫ]" ПО ЦЕНТРУ ПОЛЯ (сверху)
+            // Надпись "АТАКУЕТ" по центру
             rinkCtx.font = 'bold 14px "Segoe UI", Arial';
             rinkCtx.fillStyle = attackColor;
             rinkCtx.shadowBlur = 6;
@@ -5511,18 +5846,18 @@
             rinkCtx.fillText(text, 400 - textWidth/2, 30);
             rinkCtx.shadowBlur = 0;
         }
-
+        
         function updateTimelineDisplay(time, max) {
             const mins = Math.floor(time / 60);
             const secs = Math.floor(time % 60);
             document.getElementById('timelineTime').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
         }
-
+        
         function timelinePlayPause() {
             if (isPlaying) stopTimeline();
             else startTimeline();
         }
-
+        
         function startTimeline() {
             if (isPlaying) return;
             isPlaying = true;
@@ -5567,7 +5902,7 @@
             if (animationRequestId) cancelAnimationFrame(animationRequestId);
             animationRequestId = requestAnimationFrame(animate);
         }
-
+        
         function stopTimeline() {
             isPlaying = false;
             const playPauseBtn = document.getElementById('playPauseBtn');
@@ -5577,7 +5912,7 @@
                 animationRequestId = null;
             }
         }
-
+        
         function timelineRewind() {
             const slider = document.getElementById('timelineSlider');
             if (!slider) return;
@@ -5590,7 +5925,7 @@
             updateLiveScore(currentMatchForRink, currentTimelineValue);
             if (isPlaying) stopTimeline();
         }
-
+        
         function timelineForward() {
             const slider = document.getElementById('timelineSlider');
             if (!slider) return;
@@ -5626,22 +5961,25 @@
             showNotification('Сетка плей-офф создана!', 'success');
         }
         
-        function updatePlayoffTeams() {
-            if (!isAdminAuthenticated) return;
-            if (!leagueData.playoff.series.length) { showNotification('Создайте сетку!', 'error'); return; }
-            const sorted = [...leagueData.teams].sort((a, b) => b.points - a.points);
-            const top8 = sorted.slice(0, 8);
-            if (top8.length < 8) { showNotification('Нужно 8 команд!', 'error'); return; }
-            const qf = leagueData.playoff.series.filter(s => s.round === 1);
-            [[0,7], [1,6], [2,5], [3,4]].forEach((p, i) => {
-                if (i < qf.length && !qf[i].games.some(g => g.completed)) {
-                    qf[i].team1Id = top8[p[0]].id; qf[i].team2Id = top8[p[1]].id;
-                    qf[i].games.forEach((g, gi) => { g.homeTeamId = gi%2===0?top8[p[0]].id:top8[p[1]].id; g.awayTeamId = gi%2===0?top8[p[1]].id:top8[p[0]].id; });
-                }
+        function updatePlayoffBracket() {
+            const bracket = document.getElementById('playoffBracket');
+            if (!bracket) return;
+            if (!leagueData.playoff.series.length) { bracket.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-trophy" style="font-size:3rem;opacity:0.3;"></i><p>Плей-офф не начат</p></div>'; return; }
+            bracket.innerHTML = '';
+            const rounds = [1,2,3].filter(r => leagueData.playoff.series.some(s => s.round === r));
+            rounds.forEach(r => {
+                const roundDiv = document.createElement('div'); roundDiv.className = 'playoff-round';
+                roundDiv.innerHTML = `<div class="playoff-round-title">${r===1?'1/4 финала':r===2?'1/2 финала':'Финал'}</div>`;
+                leagueData.playoff.series.filter(s => s.round === r).forEach(s => {
+                    const t1 = leagueData.teams.find(t => t.id === s.team1Id), t2 = leagueData.teams.find(t => t.id === s.team2Id);
+                    const div = document.createElement('div'); div.className = 'playoff-series'; div.onclick = () => openPlayoffSeriesModal(s.id);
+                    div.innerHTML = `<div class="playoff-series-header"><div>${t1?.name||'TBD'} vs ${t2?.name||'TBD'}</div><div class="playoff-series-score">${s.team1Wins}-${s.team2Wins}</div></div>
+                        <div class="playoff-team ${s.winnerId===s.team1Id?'winner':(s.winnerId&&s.winnerId!==s.team1Id?'loser':'')}">${t1?.logo?`<img src="${t1.logo}" class="playoff-team-logo">`:''}<span class="playoff-team-name">${t1?.name||'TBD'}</span><span class="playoff-team-wins">${s.team1Wins}</span></div>
+                        <div class="playoff-team ${s.winnerId===s.team2Id?'winner':(s.winnerId&&s.winnerId!==s.team2Id?'loser':'')}">${t2?.logo?`<img src="${t2.logo}" class="playoff-team-logo">`:''}<span class="playoff-team-name">${t2?.name||'TBD'}</span><span class="playoff-team-wins">${s.team2Wins}</span></div>`;
+                    roundDiv.appendChild(div);
+                });
+                bracket.appendChild(roundDiv);
             });
-            updateUI(); saveToLocalStorage();
-            if (isFirebaseConnected) saveDataToFirebase();
-            showNotification('Команды обновлены!', 'success');
         }
         
         function updatePlayoffSeriesStats(sid) {
@@ -5680,27 +6018,6 @@
             if (isFirebaseConnected) saveDataToFirebase();
         }
         
-        function updatePlayoffBracket() {
-            const bracket = document.getElementById('playoffBracket');
-            if (!bracket) return;
-            if (!leagueData.playoff.series.length) { bracket.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-trophy" style="font-size:3rem;opacity:0.3;"></i><p>Плей-офф не начат</p></div>'; return; }
-            bracket.innerHTML = '';
-            const rounds = [1,2,3].filter(r => leagueData.playoff.series.some(s => s.round === r));
-            rounds.forEach(r => {
-                const roundDiv = document.createElement('div'); roundDiv.className = 'playoff-round';
-                roundDiv.innerHTML = `<div class="playoff-round-title">${r===1?'1/4 финала':r===2?'1/2 финала':'Финал'}</div>`;
-                leagueData.playoff.series.filter(s => s.round === r).forEach(s => {
-                    const t1 = leagueData.teams.find(t => t.id === s.team1Id), t2 = leagueData.teams.find(t => t.id === s.team2Id);
-                    const div = document.createElement('div'); div.className = 'playoff-series'; div.onclick = () => openPlayoffSeriesModal(s.id);
-                    div.innerHTML = `<div class="playoff-series-header"><div>${t1?.name||'TBD'} vs ${t2?.name||'TBD'}</div><div class="playoff-series-score">${s.team1Wins}-${s.team2Wins}</div></div>
-                        <div class="playoff-team ${s.winnerId===s.team1Id?'winner':(s.winnerId&&s.winnerId!==s.team1Id?'loser':'')}">${t1?.logo?`<img src="${t1.logo}" class="playoff-team-logo">`:''}<span class="playoff-team-name">${t1?.name||'TBD'}</span><span class="playoff-team-wins">${s.team1Wins}</span></div>
-                        <div class="playoff-team ${s.winnerId===s.team2Id?'winner':(s.winnerId&&s.winnerId!==s.team2Id?'loser':'')}">${t2?.logo?`<img src="${t2.logo}" class="playoff-team-logo">`:''}<span class="playoff-team-name">${t2?.name||'TBD'}</span><span class="playoff-team-wins">${s.team2Wins}</span></div>`;
-                    roundDiv.appendChild(div);
-                });
-                bracket.appendChild(roundDiv);
-            });
-        }
-        
         function openPlayoffSeriesModal(id) {
             const s = leagueData.playoff.series.find(x => x.id === id);
             if (!s) return;
@@ -5727,9 +6044,9 @@
                         <div class="playoff-match-team"><input type="number" class="playoff-match-score-input" id="po_away_${s.id}_${g.id}" value="${g.awayScore}" ${g.completed&&isAdminAuthenticated?'':'disabled'}>${at?.logo?`<img src="${at.logo}" class="playoff-match-team-logo">`:''}${at?.name||'TBD'}</div>
                     </div>
                     ${isAdminAuthenticated?`
-                    <div style="margin-top:10px;display:flex;gap:5px;justify-content:center;">
-                        <label><input type="checkbox" id="po_ot_${s.id}_${g.id}" ${g.overtime?'checked':''}> ОТ</label>
-                        <label><input type="checkbox" id="po_comp_${s.id}_${g.id}" ${g.completed?'checked':''} onchange="togglePlayoffGameEdit(${s.id},${g.id})"> Завершен</label>
+                    <div style="margin-top:10px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+                        <label class="checkbox-label"><input type="checkbox" id="po_ot_${s.id}_${g.id}" ${g.overtime?'checked':''}> ОТ</label>
+                        <label class="checkbox-label"><input type="checkbox" id="po_comp_${s.id}_${g.id}" ${g.completed?'checked':''} onchange="togglePlayoffGameEdit(${s.id},${g.id})"> Завершен</label>
                         <button class="match-action-btn simulate" onclick="simulatePlayoffGame(${s.id},${g.id})"><i class="fas fa-play"></i></button>
                         <button class="match-action-btn reset" onclick="resetPlayoffGame(${s.id},${g.id})"><i class="fas fa-undo"></i></button>
                     </div>`:''}`;
@@ -5746,8 +6063,10 @@
             const g = s?.games.find(x => x.id === gid);
             if (!g) return;
             g.completed = document.getElementById(`po_comp_${sid}_${gid}`).checked;
-            document.getElementById(`po_home_${sid}_${gid}`).disabled = document.getElementById(`po_away_${sid}_${gid}`).disabled = !g.completed;
-            if (!g.completed) { g.homeScore = 0; g.awayScore = 0; g.overtime = false; }
+            const homeInput = document.getElementById(`po_home_${sid}_${gid}`);
+            const awayInput = document.getElementById(`po_away_${sid}_${gid}`);
+            homeInput.disabled = awayInput.disabled = !g.completed;
+            if (!g.completed) { g.homeScore = 0; g.awayScore = 0; g.overtime = false; homeInput.value = 0; awayInput.value = 0; document.getElementById(`po_ot_${sid}_${gid}`).checked = false; }
         }
         
         function simulatePlayoffGame(sid, gid) {
@@ -5755,7 +6074,7 @@
             const s = leagueData.playoff.series.find(x => x.id === sid);
             const g = s?.games.find(x => x.id === gid);
             if (!g) return;
-            const { homeScore, awayScore, overtime } = simulateMatchScore(g.homeTeamId, g.awayTeamId);
+            const { homeScore, awayScore, overtime } = simulateMatchScoreWithUpset(g.homeTeamId, g.awayTeamId);
             g.homeScore = homeScore; g.awayScore = awayScore; g.overtime = overtime; g.completed = true;
             updatePlayoffSeriesStats(sid);
             openPlayoffSeriesModal(sid);
@@ -5997,164 +6316,34 @@
         
         function updateClubsFromStandings() { updateClubsUI(); showNotification('Обновлено!', 'success'); }
         
-        // ==================== LEGEND VS STAR ====================
+        // ==================== СТАТИСТИКА ====================
         
-        function openSvsLPage() {
-            document.getElementById('svslFullscreen').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            loadSvsLFromLocalStorage();
-            loadSvsLFromFirebase();
-            updateSvsLUI();
-            isSvsLAdminVisible = false;
-            document.getElementById('svslAdminPanel').classList.remove('visible');
+        function updateStats() {
+            let goals = 0, played = 0, ot = 0;
+            leagueData.matches.forEach(m => { if (m.completed) { goals += m.homeScore + m.awayScore; played++; if (m.overtime) ot++; } });
+            document.getElementById('totalGoals').textContent = goals;
+            document.getElementById('avgGoals').textContent = played ? (goals / played).toFixed(1) : '0.0';
+            document.getElementById('totalMatchesPlayed').textContent = played;
+            document.getElementById('overtimeMatches').textContent = ot;
         }
         
-        function closeSvsLPage() {
-            document.getElementById('svslFullscreen').classList.remove('active');
-            document.body.style.overflow = 'auto';
+        function loadNewsViews() {
+            const saved = localStorage.getItem('dhl_news_views');
+            if (saved) newsViews = JSON.parse(saved);
         }
         
-        function toggleSvsLAdmin() {
-            isSvsLAdminVisible = !isSvsLAdminVisible;
-            document.getElementById('svslAdminPanel').classList.toggle('visible', isSvsLAdminVisible);
-            renderSvsLMatches();
+        function saveNewsViews() { localStorage.setItem('dhl_news_views', JSON.stringify(newsViews)); }
+        
+        function incrementNewsViews(id) {
+            if (!newsViews[id]) newsViews[id] = 0;
+            newsViews[id]++;
+            saveNewsViews();
+            const news = leagueData.news.find(n => n.id === id);
+            if (news) { news.views = (news.views || 0) + 1; saveToLocalStorage(); }
+            return newsViews[id];
         }
         
-        function updateSvsLUI() {
-            document.getElementById('legendLogoDisplay').src = svslAppState.legendLogo;
-            document.getElementById('starLogoDisplay').src = svslAppState.starLogo;
-            document.getElementById('descriptionText').textContent = svslAppState.description;
-            document.getElementById('descriptionInput').value = svslAppState.description;
-            renderSvsLMatches();
-        }
-        
-        function renderSvsLMatches() {
-            const cont = document.getElementById('matchesListContainer');
-            if (!cont) return;
-            if (!svslAppState.matches.length) { cont.innerHTML = '<p style="text-align:center;color:#aaa;">Нет матчей</p>'; return; }
-            cont.innerHTML = [...svslAppState.matches].reverse().map(m => {
-                if (isSvsLAdminVisible) {
-                    return `<div class="svsl-match-item"><div class="svsl-match-teams">
-                        <div class="svsl-match-team left"><img src="${svslAppState.legendLogo}" class="svsl-match-logo legend"><span class="svsl-match-abbr">LD</span></div>
-                        <div class="svsl-match-score">${m.completed?`${m.homeScore}:${m.awayScore}`:'VS'}${m.overtime?'<span class="svsl-match-overtime">(ОТ)</span>':''}</div>
-                        <div class="svsl-match-team right"><span class="svsl-match-abbr">ST</span><img src="${svslAppState.starLogo}" class="svsl-match-logo star"></div>
-                    </div>
-                    <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-                        <div class="score-input-group"><input type="number" class="score-input" id="svsl_home_${m.id}" value="${m.homeScore}" ${!m.completed?'disabled':''}> : <input type="number" class="score-input" id="svsl_away_${m.id}" value="${m.awayScore}" ${!m.completed?'disabled':''}></div>
-                        <label class="checkbox-label"><input type="checkbox" id="svsl_ot_${m.id}" ${m.overtime?'checked':''}> ОТ</label>
-                        <label class="checkbox-label"><input type="checkbox" id="svsl_comp_${m.id}" ${m.completed?'checked':''} onchange="toggleSvsLMatchEdit(${m.id})"> Завершен</label>
-                        <div class="action-buttons"><button class="svsl-btn" onclick="saveSvsLMatch(${m.id})">💾</button><button class="svsl-btn" onclick="simulateSvsLMatch(${m.id})">🎲</button><button class="svsl-btn" onclick="resetSvsLMatch(${m.id})">↺</button><button class="svsl-btn" onclick="deleteSvsLMatch(${m.id})">🗑️</button></div>
-                    </div></div>`;
-                }
-                return `<div class="svsl-match-item"><div class="svsl-match-teams">
-                    <div class="svsl-match-team left"><img src="${svslAppState.legendLogo}" class="svsl-match-logo legend"><span class="svsl-match-abbr">LD</span></div>
-                    <div class="svsl-match-score">${m.completed?`${m.homeScore}:${m.awayScore}`:'VS'}${m.overtime?'<span class="svsl-match-overtime">(ОТ)</span>':''}</div>
-                    <div class="svsl-match-team right"><span class="svsl-match-abbr">ST</span><img src="${svslAppState.starLogo}" class="svsl-match-logo star"></div>
-                </div></div>`;
-            }).join('');
-        }
-        
-        window.toggleSvsLMatchEdit = function(id) {
-            const m = svslAppState.matches.find(x => x.id === id);
-            if (!m) return;
-            m.completed = document.getElementById(`svsl_comp_${id}`).checked;
-            const hi = document.getElementById(`svsl_home_${id}`), ai = document.getElementById(`svsl_away_${id}`);
-            hi.disabled = ai.disabled = !m.completed;
-            if (!m.completed) { m.homeScore = 0; m.awayScore = 0; m.overtime = false; hi.value = 0; ai.value = 0; document.getElementById(`svsl_ot_${id}`).checked = false; }
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-        };
-        
-        window.saveSvsLMatch = function(id) {
-            const m = svslAppState.matches.find(x => x.id === id);
-            if (!m) return;
-            m.homeScore = parseInt(document.getElementById(`svsl_home_${id}`).value) || 0;
-            m.awayScore = parseInt(document.getElementById(`svsl_away_${id}`).value) || 0;
-            m.overtime = document.getElementById(`svsl_ot_${id}`).checked;
-            m.completed = document.getElementById(`svsl_comp_${id}`).checked;
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-            showNotification('Матч сохранен!');
-        };
-        
-        window.simulateSvsLMatch = function(id) {
-            const m = svslAppState.matches.find(x => x.id === id);
-            if (!m) return;
-            let hs = Math.floor(Math.random()*5), as = Math.floor(Math.random()*5);
-            const ot = Math.random() < 0.3 && hs === as;
-            if (hs === as) Math.random() > 0.5 ? hs++ : as++;
-            m.homeScore = hs; m.awayScore = as; m.overtime = ot; m.completed = true;
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-        };
-        
-        window.resetSvsLMatch = function(id) {
-            const m = svslAppState.matches.find(x => x.id === id);
-            if (!m) return;
-            m.homeScore = 0; m.awayScore = 0; m.overtime = false; m.completed = false;
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-        };
-        
-        window.deleteSvsLMatch = function(id) {
-            if (!confirm('Удалить?')) return;
-            svslAppState.matches = svslAppState.matches.filter(m => m.id !== id);
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-        };
-        
-        window.previewImage = function(input, previewId) {
-            const f = input.files[0];
-            if (f) { const r = new FileReader(); r.onload = e => { const p = document.getElementById(previewId); p.src = e.target.result; p.style.display = 'block'; }; r.readAsDataURL(f); }
-        };
-        
-        async function uploadToImgBB(file) { return new Promise(r => { const fr = new FileReader(); fr.onload = e => r(e.target.result); fr.readAsDataURL(file); }); }
-        
-        window.uploadLegendLogo = async function() {
-            const f = document.getElementById('legendLogoInput').files[0];
-            if (!f) return;
-            svslAppState.legendLogo = await uploadToImgBB(f);
-            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
-        };
-        
-        window.uploadStarLogo = async function() {
-            const f = document.getElementById('starLogoInput').files[0];
-            if (!f) return;
-            svslAppState.starLogo = await uploadToImgBB(f);
-            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
-        };
-        
-        window.saveDescription = function() {
-            svslAppState.description = document.getElementById('descriptionInput').value;
-            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
-        };
-        
-        window.addNewMatch = function() {
-            svslAppState.matches.push({ id: Date.now(), homeScore: 0, awayScore: 0, overtime: false, completed: false });
-            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
-        };
-        
-        function saveSvsLToLocalStorage() {
-            localStorage.setItem('ls_legend_logo', svslAppState.legendLogo);
-            localStorage.setItem('ls_star_logo', svslAppState.starLogo);
-            localStorage.setItem('ls_description', svslAppState.description);
-            localStorage.setItem('ls_matches', JSON.stringify(svslAppState.matches));
-        }
-        
-        function loadSvsLFromLocalStorage() {
-            svslAppState.legendLogo = localStorage.getItem('ls_legend_logo') || svslAppState.legendLogo;
-            svslAppState.starLogo = localStorage.getItem('ls_star_logo') || svslAppState.starLogo;
-            svslAppState.description = localStorage.getItem('ls_description') || svslAppState.description;
-            svslAppState.matches = JSON.parse(localStorage.getItem('ls_matches')) || [];
-        }
-        
-        async function saveSvsLToFirebase() {
-            if (!isFirebaseConnected) return;
-            try { const { ref, set } = window.firebaseModules; await set(ref(firebaseDatabase, 'legendStar'), svslAppState); } catch(e) {}
-        }
-        
-        async function loadSvsLFromFirebase() {
-            if (!isFirebaseConnected) return;
-            try {
-                const { ref, onValue } = window.firebaseModules;
-                onValue(ref(firebaseDatabase, 'legendStar'), s => { if (s.val()) { svslAppState = {...svslAppState, ...s.val()}; updateSvsLUI(); } });
-            } catch(e) {}
-        }
+        function getNewsViews(id) { return newsViews[id] || 0; }
         
         // ==================== ЛЕГЕНДЫ ДВОРА ====================
         
@@ -6286,7 +6475,7 @@
         
         function showNotification(msg, type = 'info') {
             const n = document.getElementById('notification') || (() => { const d = document.createElement('div'); d.id = 'notification'; d.className = 'notification'; document.body.appendChild(d); return d; })();
-            n.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':type==='success'?'check-circle':'info-circle'}"></i><span id="notificationText">${msg}</span>`;
+            n.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':type==='success'?'check-circle':'info-circle'}"></i><span>${msg}</span>`;
             n.style.display = 'flex'; setTimeout(() => n.style.display = 'none', 4000);
         }
         
@@ -6300,6 +6489,7 @@
             if (!leagueData.teamAchievements) leagueData.teamAchievements = {};
             if (!leagueData.clubPage) leagueData.clubPage = { linkText: "Присоединяйся к нашей группе MAX!", linkUrl: "https://max.ru/join/fgMUJ7SzSRUx68H1C5kh3mL4U8JWvqW0hbZjXkhquJA" };
             if (!leagueData.legends) leagueData.legends = [];
+            if (!leagueData.playoff) leagueData.playoff = { stage: "not_started", champion: null, series: [] };
         }
         
         function fillAdminFields() {
@@ -6315,11 +6505,172 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelector(`.nav-btn[data-page="${pageId.replace('Page','')}"]`).classList.add('active');
+            const btnMap = { homePage: 'home', standingsPage: 'standings', matchesPage: 'matches', playoffPage: 'playoff', clubsPage: 'clubs', newsPage: 'news', statsPage: 'stats' };
+            const btn = document.querySelector(`.nav-btn[data-page="${btnMap[pageId]}"]`);
+            if (btn) btn.classList.add('active');
             if (pageId === 'matchesPage') updateMatchesUI();
             if (pageId === 'clubsPage') updateClubsUI();
             if (pageId === 'statsPage') updateLegendsUI();
         }
+        
+        // ==================== LEGEND VS STAR ====================
+        
+        function openSvsLPage() {
+            document.getElementById('svslFullscreen').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            loadSvsLFromLocalStorage();
+            loadSvsLFromFirebase();
+            updateSvsLUI();
+            isSvsLAdminVisible = false;
+            document.getElementById('svslAdminPanel').classList.remove('visible');
+        }
+        
+        function closeSvsLPage() {
+            document.getElementById('svslFullscreen').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function toggleSvsLAdmin() {
+            isSvsLAdminVisible = !isSvsLAdminVisible;
+            document.getElementById('svslAdminPanel').classList.toggle('visible', isSvsLAdminVisible);
+            renderSvsLMatches();
+        }
+        
+        function updateSvsLUI() {
+            document.getElementById('legendLogoDisplay').src = svslAppState.legendLogo;
+            document.getElementById('starLogoDisplay').src = svslAppState.starLogo;
+            document.getElementById('descriptionText').textContent = svslAppState.description;
+            document.getElementById('descriptionInput').value = svslAppState.description;
+            renderSvsLMatches();
+        }
+        
+        function renderSvsLMatches() {
+            const cont = document.getElementById('matchesListContainer');
+            if (!cont) return;
+            if (!svslAppState.matches.length) { cont.innerHTML = '<p style="text-align:center;color:#aaa;">Нет матчей</p>'; return; }
+            cont.innerHTML = [...svslAppState.matches].reverse().map(m => {
+                if (isSvsLAdminVisible) {
+                    return `<div class="svsl-match-item"><div class="svsl-match-teams">
+                        <div class="svsl-match-team left"><img src="${svslAppState.legendLogo}" class="svsl-match-logo legend"><span class="svsl-match-abbr">LD</span></div>
+                        <div class="svsl-match-score">${m.completed?`${m.homeScore}:${m.awayScore}`:'VS'}${m.overtime?'<span class="svsl-match-overtime">(ОТ)</span>':''}</div>
+                        <div class="svsl-match-team right"><span class="svsl-match-abbr">ST</span><img src="${svslAppState.starLogo}" class="svsl-match-logo star"></div>
+                    </div>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+                        <div class="score-input-group"><input type="number" class="score-input" id="svsl_home_${m.id}" value="${m.homeScore}" ${!m.completed?'disabled':''}> : <input type="number" class="score-input" id="svsl_away_${m.id}" value="${m.awayScore}" ${!m.completed?'disabled':''}></div>
+                        <label class="checkbox-label"><input type="checkbox" id="svsl_ot_${m.id}" ${m.overtime?'checked':''}> ОТ</label>
+                        <label class="checkbox-label"><input type="checkbox" id="svsl_comp_${m.id}" ${m.completed?'checked':''} onchange="toggleSvsLMatchEdit(${m.id})"> Завершен</label>
+                        <div class="action-buttons"><button class="svsl-btn" onclick="saveSvsLMatch(${m.id})">💾</button><button class="svsl-btn" onclick="simulateSvsLMatch(${m.id})">🎲</button><button class="svsl-btn" onclick="resetSvsLMatch(${m.id})">↺</button><button class="svsl-btn" onclick="deleteSvsLMatch(${m.id})">🗑️</button></div>
+                    </div></div>`;
+                }
+                return `<div class="svsl-match-item"><div class="svsl-match-teams">
+                    <div class="svsl-match-team left"><img src="${svslAppState.legendLogo}" class="svsl-match-logo legend"><span class="svsl-match-abbr">LD</span></div>
+                    <div class="svsl-match-score">${m.completed?`${m.homeScore}:${m.awayScore}`:'VS'}${m.overtime?'<span class="svsl-match-overtime">(ОТ)</span>':''}</div>
+                    <div class="svsl-match-team right"><span class="svsl-match-abbr">ST</span><img src="${svslAppState.starLogo}" class="svsl-match-logo star"></div>
+                </div></div>`;
+            }).join('');
+        }
+        
+        window.toggleSvsLMatchEdit = function(id) {
+            const m = svslAppState.matches.find(x => x.id === id);
+            if (!m) return;
+            m.completed = document.getElementById(`svsl_comp_${id}`).checked;
+            const hi = document.getElementById(`svsl_home_${id}`), ai = document.getElementById(`svsl_away_${id}`);
+            hi.disabled = ai.disabled = !m.completed;
+            if (!m.completed) { m.homeScore = 0; m.awayScore = 0; m.overtime = false; hi.value = 0; ai.value = 0; document.getElementById(`svsl_ot_${id}`).checked = false; }
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+        };
+        
+        window.saveSvsLMatch = function(id) {
+            const m = svslAppState.matches.find(x => x.id === id);
+            if (!m) return;
+            m.homeScore = parseInt(document.getElementById(`svsl_home_${id}`).value) || 0;
+            m.awayScore = parseInt(document.getElementById(`svsl_away_${id}`).value) || 0;
+            m.overtime = document.getElementById(`svsl_ot_${id}`).checked;
+            m.completed = document.getElementById(`svsl_comp_${id}`).checked;
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+            showNotification('Матч сохранен!');
+        };
+        
+        window.simulateSvsLMatch = function(id) {
+            const m = svslAppState.matches.find(x => x.id === id);
+            if (!m) return;
+            let hs = Math.floor(Math.random()*5), as = Math.floor(Math.random()*5);
+            const ot = Math.random() < 0.3 && hs === as;
+            if (hs === as) Math.random() > 0.5 ? hs++ : as++;
+            m.homeScore = hs; m.awayScore = as; m.overtime = ot; m.completed = true;
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+        };
+        
+        window.resetSvsLMatch = function(id) {
+            const m = svslAppState.matches.find(x => x.id === id);
+            if (!m) return;
+            m.homeScore = 0; m.awayScore = 0; m.overtime = false; m.completed = false;
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+        };
+        
+        window.deleteSvsLMatch = function(id) {
+            if (!confirm('Удалить?')) return;
+            svslAppState.matches = svslAppState.matches.filter(m => m.id !== id);
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+        };
+        
+        window.previewImage = function(input, previewId) {
+            const f = input.files[0];
+            if (f) { const r = new FileReader(); r.onload = e => { const p = document.getElementById(previewId); p.src = e.target.result; p.style.display = 'block'; }; r.readAsDataURL(f); }
+        };
+        
+        window.uploadLegendLogo = async function() {
+            const f = document.getElementById('legendLogoInput').files[0];
+            if (!f) return;
+            svslAppState.legendLogo = await uploadToImgBB(f);
+            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
+        };
+        
+        window.uploadStarLogo = async function() {
+            const f = document.getElementById('starLogoInput').files[0];
+            if (!f) return;
+            svslAppState.starLogo = await uploadToImgBB(f);
+            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
+        };
+        
+        window.saveDescription = function() {
+            svslAppState.description = document.getElementById('descriptionInput').value;
+            updateSvsLUI(); saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase();
+        };
+        
+        window.addNewMatch = function() {
+            svslAppState.matches.push({ id: Date.now(), homeScore: 0, awayScore: 0, overtime: false, completed: false });
+            saveSvsLToLocalStorage(); if (isFirebaseConnected) saveSvsLToFirebase(); renderSvsLMatches();
+        };
+        
+        function saveSvsLToLocalStorage() {
+            localStorage.setItem('ls_legend_logo', svslAppState.legendLogo);
+            localStorage.setItem('ls_star_logo', svslAppState.starLogo);
+            localStorage.setItem('ls_description', svslAppState.description);
+            localStorage.setItem('ls_matches', JSON.stringify(svslAppState.matches));
+        }
+        
+        function loadSvsLFromLocalStorage() {
+            svslAppState.legendLogo = localStorage.getItem('ls_legend_logo') || svslAppState.legendLogo;
+            svslAppState.starLogo = localStorage.getItem('ls_star_logo') || svslAppState.starLogo;
+            svslAppState.description = localStorage.getItem('ls_description') || svslAppState.description;
+            svslAppState.matches = JSON.parse(localStorage.getItem('ls_matches')) || [];
+        }
+        
+        async function saveSvsLToFirebase() {
+            if (!isFirebaseConnected) return;
+            try { const { ref, set } = window.firebaseModules; await set(ref(firebaseDatabase, 'legendStar'), svslAppState); } catch(e) {}
+        }
+        
+        async function loadSvsLFromFirebase() {
+            if (!isFirebaseConnected) return;
+            try {
+                const { ref, onValue } = window.firebaseModules;
+                onValue(ref(firebaseDatabase, 'legendStar'), s => { if (s.val()) { svslAppState = {...svslAppState, ...s.val()}; updateSvsLUI(); } });
+            } catch(e) {}
+        }
+        
+        async function uploadToImgBB(file) { return new Promise(r => { const fr = new FileReader(); fr.onload = e => r(e.target.result); fr.readAsDataURL(file); }); }
         
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         
@@ -6352,7 +6703,7 @@
             showLoader('globalLoader', false);
         });
         
-        // Экспорт
+        // Экспорт глобальных функций
         window.installPWA = installPWA; window.dismissInstallPrompt = dismissInstallPrompt;
         window.accessAdminFromLogo = accessAdminFromLogo; window.closePasswordModal = closePasswordModal;
         window.checkAdminPassword = checkAdminPassword; window.exitAdminPanel = exitAdminPanel;
@@ -6366,11 +6717,13 @@
         window.editTextBlock = editTextBlock; window.saveTextBlock = saveTextBlock; window.cancelEditText = cancelEditText;
         window.handleTeamLogoUpload = handleTeamLogoUpload; window.handleNewsImageUpload = handleNewsImageUpload;
         window.handleLeagueLogoUpload = handleLeagueLogoUpload; window.handleEditTeamLogoUpload = handleEditTeamLogoUpload;
-        window.handleEditNewsImageUpload = handleEditNewsImageUpload;
+        window.handleEditNewsImageUpload = handleEditNewsImageUpload; window.handleAddNewsImageUpload = handleAddNewsImageUpload;
         window.addTeam = addTeam; window.editTeam = editTeam; window.saveTeamEdit = saveTeamEdit;
         window.closeEditTeamModal = closeEditTeamModal; window.deleteTeam = deleteTeam;
         window.resetTeamStats = resetTeamStats; window.addNews = addNews; window.editNews = editNews;
         window.saveNewsEdit = saveNewsEdit; window.closeEditNewsModal = closeEditNewsModal; window.deleteNews = deleteNews;
+        window.openAddNewsModal = openAddNewsModal; window.closeAddNewsModal = closeAddNewsModal; window.saveAddNews = saveAddNews;
+        window.formatNewsText = formatNewsText; window.formatAddNewsText = formatAddNewsText;
         window.saveContentChanges = saveContentChanges; window.syncContentToFirebase = syncContentToFirebase;
         window.saveFirebaseConfig = saveFirebaseConfig; window.testFirebaseConnection = testFirebaseConnection;
         window.saveImgbbConfig = saveImgbbConfig; window.testImgbbConnection = testImgbbConnection;
@@ -6380,7 +6733,7 @@
         window.deleteMatch = deleteMatch; window.toggleMatchEdit = toggleMatchEdit;
         window.editMatchScoreInCalendar = editMatchScoreInCalendar; window.closeEditMatchModal = closeEditMatchModal;
         window.simulateCalendarMatch = simulateCalendarMatch; window.saveCalendarMatchScore = saveCalendarMatchScore;
-        window.generatePlayoffBracket = generatePlayoffBracket; window.updatePlayoffTeams = updatePlayoffTeams;
+        window.generatePlayoffBracket = generatePlayoffBracket; window.manualUpdatePlayoffTeams = manualUpdatePlayoffTeams;
         window.openPlayoffSeriesModal = openPlayoffSeriesModal; window.closePlayoffSeriesModal = closePlayoffSeriesModal;
         window.togglePlayoffGameEdit = togglePlayoffGameEdit; window.simulatePlayoffGame = simulatePlayoffGame;
         window.resetPlayoffGame = resetPlayoffGame; window.simulateAllPlayoffSeriesGames = simulateAllPlayoffSeriesGames;
@@ -6402,7 +6755,10 @@
         window.timelineForward = timelineForward; window.stopTimeline = stopTimeline;
         window.addLegend = addLegend; window.editLegend = editLegend; window.closeEditLegendModal = closeEditLegendModal;
         window.saveLegend = saveLegend; window.deleteLegend = deleteLegend;
+        
+        function addNews() { openAddNewsModal(); }
     })();
 </script>
 </body>
 </html>
+
